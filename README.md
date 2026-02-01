@@ -1,16 +1,17 @@
-# React + Vite
+Gemma Stat is an AI-powered data analytics platform that solves critical inventory management challenges in healthcare laboratories. Labs lose 15-25% of their inventory annually due to expired reagents and poor stock visibility—translating to ₹50-80 Lakhs in wastage per mid-size lab.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The Solution
+We built intelligent AI agents using Google Gemini that monitor lab databases 24/7 via Model Context Protocol (MCP), delivering proactive WhatsApp alerts for expiring reagents, low stock levels, and usage anomalies. Instead of checking dashboards, lab managers receive actionable insights directly on their phones.
 
-Currently, two official plugins are available:
+Technology Stack
+Backend: Python, FastAPI, SQLAlchemy, PostgreSQL (Neon)
+Frontend: React, Vite, TailwindCSS, Recharts
+AI: Google Gemini API, MCP Protocol for auto-schema discovery
+Integrations: Twilio WhatsApp, Shopify, Cloudflare R2
+Infrastructure: Railway (backend), Vercel (frontend)
+Key Innovation
+Our embedded MCP server enables AI agents to connect to any database in 5 minutes—automatically discovering schemas and executing secure queries, making intelligent analytics accessible to labs without technical expertise.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Demo Links
+Live App: app.salusgemmalabs.com
+API Docs: api.salusgemmalabs.com/docs
