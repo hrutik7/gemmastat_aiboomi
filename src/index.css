@@ -1,0 +1,572 @@
+/* Import Google Fonts - Placed at the very top */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code&display=swap');
+
+/* Apply Tailwind CSS base styles - Declared only ONCE */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- GLOBAL LAYOUT AND SCROLLING RULES --- */
+@layer base {
+
+  /* Set a professional font for the entire app */
+  body {
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+    /* Prevent the main body from ever showing a scrollbar */
+  }
+
+
+  .ai-analyst-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    /* Mobile first: single column */
+    gap: 1.5rem;
+    height: 100%;
+  }
+
+  /* On desktop, switch to a multi-column layout */
+  @media (min-width: 1024px) {
+    .ai-analyst-grid {
+      grid-template-columns: minmax(0, 1fr) 350px;
+      /* Flexible main column, fixed sidebar */
+    }
+  }
+
+  /* 
+    This is the central column containing the chat. It's now a simple container.
+    The scrolling and sticky footer logic will be handled inside AnalysisWorkspace.
+  */
+  .chat-column {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* This is the chat history div, it will grow and scroll */
+  .chat-history {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    -webkit-overflow-scrolling: touch;
+    /* Remove bottom padding as the input is now truly separate */
+  }
+
+  /* The right-hand sidebar for context/info */
+  .context-sidebar {
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    @apply hidden lg:block;
+  }
+
+  /*
+    Ensure the code editor and result window scroll internally.
+  */
+  .code-editor pre,
+  .result-window>div:last-child {
+    max-height: 22rem;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+
+/*
+    The `main` element itself should fill the viewport height and manage its
+    direct children's layout.
+  */
+main {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/*
+    This `scrollable-content` class is applied to the div wrapping `<Outlet />` in AppLayout.jsx.
+    It will be the primary scrollable area for individual page content.
+  */
+main>div.scrollable-content {
+  flex-grow: 1;
+  /* Make it take all available vertical space */
+  overflow-y: auto;
+  /* Add vertical scrollbar only when needed */
+  -webkit-overflow-scrolling: touch;
+  /* Smooth scrolling on iOS */
+}
+
+/* Specific scrolling for the AI Analyst chat history to keep it contained. */
+.chat-history {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  /* Give some space for the scrollbar, if present */
+  -webkit-overflow-scrolling: touch;
+}
+
+/*
+    Ensure the code editor and result window maintain their fixed height and scroll internally.
+  */
+.code-editor pre,
+.result-window>div:last-child {
+  max-height: 22rem;
+  /* A fixed height for these specific elements */
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+
+/* --- STYLES FOR PRISMJS (CODE EDITOR) --- */
+/* (This entire section is unchanged) */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #ccc;
+  background: none;
+  font-family: 'Fira Code', 'Fira Mono', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  font-size: 1em;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.5;
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+.token.comment,
+.token.block-comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #999;
+}
+
+.token.punctuation {
+  color: #ccc;
+}
+
+.token.tag,
+.token.attr-name,
+.token.namespace,
+.token.deleted {
+  color: #e2777a;
+}
+
+.token.function-name {
+  color: #6196cc;
+}
+
+.token.boolean,
+.token.number,
+.token.function {
+  color: #f08d49;
+}
+
+.token.property,
+.token.class-name,
+.token.constant,
+.token.symbol {
+  color: #f8c555;
+}
+
+.token.selector,
+.token.important,
+.token.atrule,
+.token.keyword,
+.token.builtin {
+  color: #cc99cd;
+}
+
+.token.string,
+.token.char,
+.token.attr-value,
+.token.regex,
+.token.variable {
+  color: #7ec699;
+}
+
+.token.operator,
+.token.entity,
+.token.url {
+  color: #67cdcc;
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.inserted {
+  color: green;
+}
+
+/* --- CUSTOM COMPONENT STYLES --- */
+@layer components {
+
+  /* A simple class for section titles */
+  .section-title {
+    @apply text-xl font-bold text-gray-800 dark:text-gray-100 mb-4;
+  }
+}
+
+/* --- CSS Variables for React Select dark mode --- */
+/* (This section is unchanged) */
+:root {
+  --select-bg: #f9fafb;
+  --select-border: #d1d5db;
+  --select-text: #374151;
+  --select-menu-bg: #ffffff;
+  --select-menu-text: #374151;
+  --select-option-hover: #e5e7eb;
+  --select-option-text: #374151;
+}
+
+.dark {
+  --select-bg: #374151;
+  --select-border: #4b5563;
+  --select-text: #f9fafb;
+  --select-menu-bg: #374151;
+  --select-menu-text: #f9fafb;
+  --select-option-hover: #4b5563;
+  --select-option-text: #f9fafb;
+}
+
+/* --- ANIMATION UTILITIES --- */
+/* (This section is unchanged) */
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-ping-slow {
+    animation: ping-slow 4s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  @keyframes ping-slow {
+
+    75%,
+    100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+}
+
+/* --- Shepherd.js custom theme --- */
+/* (This entire section is unchanged) */
+.shepherd-modal-overlay-container {
+  backdrop-filter: blur(2px);
+}
+
+.shepherd-element.gemma-tour {
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+}
+
+.dark .shepherd-element.gemma-tour {
+  background: #111827;
+  border: 1px solid #374151;
+}
+
+.shepherd-element.gemma-tour .shepherd-header {
+  background: linear-gradient(90deg, #2563eb, #7c3aed);
+  color: white;
+  padding: 12px 16px;
+}
+
+.dark .shepherd-element.gemma-tour .shepherd-header {
+  background: linear-gradient(90deg, #1d4ed8, #6d28d9);
+}
+
+.shepherd-element.gemma-tour .shepherd-text {
+  color: #111827;
+}
+
+.dark .shepherd-element.gemma-tour .shepherd-text {
+  color: #e5e7eb;
+}
+
+.shepherd-element.gemma-tour .shepherd-title {
+  color: #111827;
+}
+
+.dark .shepherd-element.gemma-tour .shepherd-title {
+  color: #f9fafb;
+}
+
+.shepherd-element.gemma-tour .shepherd-cancel-icon {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.dark .shepherd-element.gemma-tour .shepherd-cancel-icon {
+  color: #e5e7eb;
+}
+
+.shepherd-element.gemma-tour .shepherd-arrow:before {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+}
+
+.dark .shepherd-element.gemma-tour .shepherd-arrow:before {
+  background: #111827;
+  border: 1px solid #374151;
+}
+
+.gemma-tour-btn.shepherd-button {
+  background: #2563eb;
+  color: white;
+  border-radius: 10px;
+  padding: 8px 14px;
+  border: none;
+}
+
+.gemma-tour-btn.shepherd-button:not(:first-child) {
+  background: #6d28d9;
+}
+
+.gemma-tour-btn.shepherd-button:hover {
+  opacity: 0.95;
+}
+
+.shepherd-button:first-child.gemma-tour-btn {
+  background: #4b5563;
+}
+
+.dark .shepherd-button:first-child.gemma-tour-btn {
+  background: #6b7280;
+}
+
+/* --- REACT FLOW WORKFLOW BUILDER STYLES --- */
+.react-flow__node {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.react-flow__node:hover {
+  z-index: 10 !important;
+}
+
+.react-flow__handle {
+  transition: all 0.2s ease;
+}
+
+.react-flow__handle:hover {
+  transform: scale(1.3);
+}
+
+.react-flow__edge-path {
+  stroke-width: 2;
+  transition: stroke 0.2s ease;
+}
+
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke: #818cf8;
+  stroke-width: 3;
+}
+
+.react-flow__controls {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+.react-flow__controls-button {
+  background: #374151 !important;
+  border-color: #4b5563 !important;
+  color: #e5e7eb !important;
+  transition: all 0.2s ease !important;
+}
+
+.react-flow__controls-button:hover {
+  background: #4b5563 !important;
+}
+
+.react-flow__controls-button svg {
+  fill: #e5e7eb !important;
+}
+
+.react-flow__minimap {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Animated gradient border for workflow canvas */
+@keyframes workflow-border-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+  }
+
+  50% {
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
+  }
+}
+
+.workflow-canvas-glow {
+  animation: workflow-border-glow 3s ease-in-out infinite;
+}
+
+/* Pulse animation for unconfigured nodes */
+@keyframes node-pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.node-unconfigured {
+  animation: node-pulse 2s ease-in-out infinite;
+}
+
+/* Smooth transitions for node palette */
+.node-palette-item {
+  transition: all 0.2s ease;
+}
+
+.node-palette-item:hover {
+  transform: translateX(4px);
+}
+
+/* Glassmorphism effects */
+.glass-panel {
+  background: rgba(31, 41, 55, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(75, 85, 99, 0.5);
+}
+
+/* Custom scrollbar for workflow builder */
+.workflow-builder-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.workflow-builder-scroll::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+.workflow-builder-scroll::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 3px;
+}
+
+.workflow-builder-scroll::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* Shimmer animation for Generate button */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  50%,
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Shimmering border animation for AI Generate badge */
+@keyframes shimmer-border {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 300% 50%;
+  }
+}
+
+/* Glow pulse animation for AI thinking state */
+@keyframes glow-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.6);
+  }
+}
+
+.ai-thinking-glow {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* Typewriter cursor effect */
+@keyframes blink {
+
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.typing-cursor::after {
+  content: '|';
+  animation: blink 1s step-end infinite;
+  color: #8b5cf6;
+  margin-left: 2px;
+}
+
+/* Gradient text animation */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animated-gradient-text {
+  background: linear-gradient(90deg, #8b5cf6, #ec4899, #8b5cf6);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 3s ease infinite;
+}
